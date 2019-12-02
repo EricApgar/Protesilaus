@@ -8,7 +8,6 @@ from TabData import TabData
 class TabInput(QWidget):
     
     name = "Input"  # Label for tab.
-    # index = 0  # Index of tab in relation to others, from left.
     data_file_path = ""  # Part of display, so included in UI.
 
     def __init__(self, parent):

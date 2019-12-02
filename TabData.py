@@ -1,10 +1,9 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QListWidget
-
+from TabTrain import TabTrain
 
 class TabData(QWidget):
 
     name = "Data"  # Still not sure about this property being here...
-    # index = 1  # Index of tab in relation to others, from left.
 
     def __init__(self, parent):
 
@@ -28,8 +27,11 @@ class TabData(QWidget):
     def feature_clicked(self):
 
         selected_item = self.feature_list.selectedItems()
-        self.data_master.truth_class = selected_item[0].text()
+        self.data_master.truth_class = selected_item[0].text()  # Set truth class to selected feature.
+        self.data_master.feature_classes = self.data_master.input_data.columns[self.data_master.input_data.columns != self.data_master.truth_class]
         
+        tab_index = self.my_parent.tab_group.indexOf(self.my_parent.tab_group.findChild(TabTrain))  # Find index of Data tab.
+        self.my_parent.tab_group.setTabEnabled(tab_index, True)  # Feature selected, unlock next tab.
         # TODO. Plot something cool when you click feature.
 
     def update_feat_list(self, new_feat_list):

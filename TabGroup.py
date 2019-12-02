@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QTabWidget, QVBoxLayout
 from TabInput import TabInput
 from TabData import TabData
+from TabTrain import TabTrain
 
 
 class TabGroup(QWidget):
@@ -14,7 +15,8 @@ class TabGroup(QWidget):
 
         self.tab_dict = {
             "Input":TabInput(self),
-            "Data":TabData(self)}
+            "Data":TabData(self),
+            "Train":TabTrain(self)}
 
         # Add all tabs to the tab group.
         self.tab_group = QTabWidget()  # Create Tab Group from widget.
@@ -23,6 +25,7 @@ class TabGroup(QWidget):
         
         self.tab_group.setTabEnabled(self.tab_group.indexOf(self.tab_group.findChild(TabInput)), True)  # Enable input tab.
         self.tab_group.setTabEnabled(self.tab_group.indexOf(self.tab_group.findChild(TabData)), False)  # Disable all other tabs to start.
+        self.tab_group.setTabEnabled(self.tab_group.indexOf(self.tab_group.findChild(TabTrain)), False)  # Disable all other tabs to start.
 
         # Define layout of this QWidget.
         self.layout = QVBoxLayout(self)  # V = Vertical aligned layout.
