@@ -23,5 +23,7 @@ class TabTrain(QWidget):
 
     def on_btn_push_train(self):
 
+        model_list = ["svm", "discr", "cart", "knn", "nn"]
+
         self.data_master.set_truth_data()
-        self.data_master.train_all_models()
+        self.data_master.train_models(model_list)
