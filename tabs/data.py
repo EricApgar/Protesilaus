@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QListWidget
-from TabTrain import TabTrain
+from tabs.train import TabTrain
 
 class TabData(QWidget):
 

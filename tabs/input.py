@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit, QFileDialog
 # from DataMaster import DataMaster
 import pandas as pandas
 import os.path as path
-from TabData import TabData
+from tabs.data import TabData
 
 
 class TabInput(QWidget):

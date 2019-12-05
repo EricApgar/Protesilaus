@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow
-from DataMaster import DataMaster
-from TabGroup import TabGroup
+from data_master import DataMaster
+from tabs.group import TabGroup
 
 
 class MainWindow(QMainWindow):

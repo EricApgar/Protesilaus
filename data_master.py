@@ -54,7 +54,7 @@ class DataMaster(object):
         preds = {}
         for model in model_list:
             if model == "svm":
-                preds[model] = self.train_svm()
+                preds[model], train_time = self.train_svm()
                 self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             elif model == "discr":
                 preds[model] = self.train_discr()
@@ -79,10 +79,14 @@ class DataMaster(object):
         X = self.feature_data
         Y = self.truth_data
         
+        start_time = time.time()
+
         model = SVC(kernel='linear')
         Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
 
-        return Y_pred
+        train_time = time.time() - start_time
+
+        return Y_pred, train_time
 
     def train_discr(self):
 
