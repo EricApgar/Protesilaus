@@ -9,6 +9,7 @@ from sklearn.neural_network import MLPClassifier
 import time as time
 import random as random
 import numpy as numpy
+from anonymous import Anonymous
 
 class DataMaster(object):
 
@@ -24,6 +25,8 @@ class DataMaster(object):
               "cart":numpy.nan,
               "knn":numpy.nan,
               "nn":numpy.nan}
+
+    model_traits = {}
 
     kfolds_seed = random.randint(1, 10)
     kfolds = StratifiedKFold(n_splits=10, random_state=kfolds_seed)
@@ -68,8 +71,13 @@ class DataMaster(object):
             elif model == "nn":
                 preds[model] = self.train_nn()
                 self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
-            else:
+            else:  # Should never get here. Will break on statement after this print().
                 print("ERROR: Model \"" + model + "\" not found.")
+                # Need to actually error out here instead of just printing. TODO.
+
+            self.model_traits[model] = Anonymous(predictions=preds[model], 
+                                                 train_time=train_time, 
+                                                 accuracy=self.scores[model])
 
         # for value in self.scores.values():  # Print all scores to screen. DEBUGGING.
         #     print("{0:.2f}".format(value))

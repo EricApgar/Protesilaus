@@ -52,6 +52,7 @@ class TabResults(QWidget):
                         "knn":"K-Nearest-Neighbors:",
                         "nn":"Neural Network:"}
 
+        # Create the labels, check boxes for displaying performance numbers for all models.
         for model in model_labels:
             self.model_traits[model] = Anonymous(full_tag=model_labels[model],
                 label_name=QLabel(self),
@@ -68,4 +69,23 @@ class TabResults(QWidget):
 
             label_top += vert_offset
 
+        # Setup Browse button.
+        btn_browse = QPushButton("Browse...", self)
+        btn_browse.setToolTip("Browse to input data file.")
+        btn_browse.resize(80, 30)  # (button_width_pixels, button_height_pixels)
+        btn_browse.move(label_left, label_top)  # (button_start_x_pixels, button_start_y_pixels)
+        btn_browse.clicked.connect(self.on_btn_push_browse)
+        
+        self.path_disp_pred = QLineEdit(self)  # Setup File path display.
+        self.path_disp_pred.setGeometry(100, label_top, 500, label_height)
 
+    def on_btn_push_browse(self):
+        a = 1
+
+    def add_update_results(self):
+
+        for model in self.data_master.model_traits:
+            accuracy = self.data_master.model_traits[model].accuracy
+            train_time = self.data_master.model_traits[model].train_time
+            self.model_traits[model].train_time.setText("{0:.2f}".format(train_time))
+            self.model_traits[model].label_score.setText("{0:.2f}".format(accuracy))
