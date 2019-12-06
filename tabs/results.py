@@ -49,6 +49,7 @@ class TabResults(QWidget):
 
         label_top += vert_offset
 
+        # This list MUST match list of models in DataMaster.train_models().
         model_labels = {"svm":"Support Vector Machine:",
                         "discr":"Discriminant Classifier:",
                         "cart":"Random Forest:",
@@ -92,16 +93,18 @@ class TabResults(QWidget):
             data = pandas.read_excel(file_name)  # Read in data from excel to DataFrame.
 
             # Check that all the features you used to make the models are actually in this data set.
-            feat_names = data.columns[data.columns != self.data_master.truth_class]
+            input_feats = self.data_master.input_data.columns  # From original data, 
+            feat_names = input_feats[input_feats != self.data_master.truth_class]
             if np.all(np.isin(feat_names, data.columns)):
                 data_for_pred = data[feat_names.values]  # Data that you will now make predictions on.
                 data_for_save = deepcopy(data_for_pred)
 
                 # Loop through models, make predictions if check box checked.
-                for model in self.model_traits:
-                    if self.model_traits[model].check_box.isChecked():
-                        predictions = self.data_master.predict_on_new_data(model, data)
-                        col_name = "Predicted " + self.data_master.truth_class + "- " + model
+                for model_name in self.model_traits:
+                    if self.model_traits[model_name].check_box.isChecked():
+                        model = self.data_master.trained_models[model_name]
+                        predictions = self.data_master.predict_on_new_data(model, data_for_pred)
+                        col_name = "Predicted " + self.data_master.truth_class + "- " + model_name
                         data_for_save.insert(0, col_name, predictions)
 
             else:

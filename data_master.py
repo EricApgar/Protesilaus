@@ -98,7 +98,7 @@ class DataMaster(object):
         model = SVC(kernel='linear')
         Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)        
 
-        self.trained_models["discr"] = model.fit(X, Y)
+        self.trained_models["svm"] = model.fit(X, Y)
 
         train_time = time.time() - start_time
 
@@ -176,5 +176,8 @@ class DataMaster(object):
 
         return Y_pred, train_time
 
-    def predict_on_new_data(self, model):
-        a = 1
+    def predict_on_new_data(self, model, data):
+        
+        predictions = model.predict(data)
+
+        return predictions
