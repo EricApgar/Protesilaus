@@ -1,6 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit, QCheckBox
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit, QCheckBox, QFileDialog
 from data_master import DataMaster
 from anonymous import Anonymous
+import pandas as pandas
+import numpy as np
+from copy import deepcopy as deepcopy
 
 class TabResults(QWidget):
 
@@ -72,15 +75,37 @@ class TabResults(QWidget):
         # Setup Browse button.
         btn_browse = QPushButton("Browse...", self)
         btn_browse.setToolTip("Browse to input data file.")
-        btn_browse.resize(80, 30)  # (button_width_pixels, button_height_pixels)
-        btn_browse.move(label_left, label_top)  # (button_start_x_pixels, button_start_y_pixels)
+        btn_browse.setGeometry(label_left, label_top+100, 80, 30)
         btn_browse.clicked.connect(self.on_btn_push_browse)
         
         self.path_disp_pred = QLineEdit(self)  # Setup File path display.
-        self.path_disp_pred.setGeometry(100, label_top, 500, label_height)
+        self.path_disp_pred.setGeometry(label_left+100, label_top+100, 500, label_height)
 
     def on_btn_push_browse(self):
-        a = 1
+
+        file_name = QFileDialog.getOpenFileName(self, "Select input data: ", "C:\'", "*.xlsx")  # TODO: start location
+        file_name = file_name[0]  # Parse down to single arg of full file path.
+
+        if not file_name:
+            print("Bad input file.")
+        else:
+            data = pandas.read_excel(file_name)  # Read in data from excel to DataFrame.
+
+            # Check that all the features you used to make the models are actually in this data set.
+            feat_names = data.columns[data.columns != self.data_master.truth_class]
+            if np.all(np.isin(feat_names, data.columns)):
+                data_for_pred = data[feat_names.values]  # Data that you will now make predictions on.
+                data_for_save = deepcopy(data_for_pred)
+
+                # Loop through models, make predictions if check box checked.
+                for model in self.model_traits:
+                    if self.model_traits[model].check_box.isChecked():
+                        predictions = self.data_master.predict_on_new_data(model, data)
+                        col_name = "Predicted " + self.data_master.truth_class + "- " + model
+                        data_for_save.insert(0, col_name, predictions)
+
+            else:
+                print("Missing features needed for predictions.")
 
     def add_update_results(self):
 

@@ -11,6 +11,7 @@ import random as random
 import numpy as numpy
 from anonymous import Anonymous
 
+
 class DataMaster(object):
 
     input_data = pandas.DataFrame()  # Make Empty DataFrame
@@ -30,6 +31,11 @@ class DataMaster(object):
 
     kfolds_seed = random.randint(1, 10)
     kfolds = StratifiedKFold(n_splits=10, random_state=kfolds_seed)
+
+    data_for_predict = pandas.DataFrame()
+    preds_to_save = pandas.DataFrame()
+
+    trained_models = {}  # Models trained on all data.
 
     def __init__(self):
 
@@ -60,16 +66,16 @@ class DataMaster(object):
                 preds[model], train_time = self.train_svm()
                 self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             elif model == "discr":
-                preds[model] = self.train_discr()
+                preds[model], train_time = self.train_discr()
                 self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             elif model == "cart":
-                preds[model] = self.train_cart()
+                preds[model], train_time = self.train_cart()
                 self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             elif model == "knn":
-                preds[model] = self.train_knn()
+                preds[model], train_time = self.train_knn()
                 self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             elif model == "nn":
-                preds[model] = self.train_nn()
+                preds[model], train_time = self.train_nn()
                 self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             else:  # Should never get here. Will break on statement after this print().
                 print("ERROR: Model \"" + model + "\" not found.")
@@ -90,7 +96,9 @@ class DataMaster(object):
         start_time = time.time()
 
         model = SVC(kernel='linear')
-        Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
+        Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)        
+
+        self.trained_models["discr"] = model.fit(X, Y)
 
         train_time = time.time() - start_time
 
@@ -101,6 +109,8 @@ class DataMaster(object):
         X = self.feature_data
         Y = self.truth_data
         
+        start_time = time.time()
+
         model = LinearDiscriminantAnalysis(n_components=None, 
                                            priors=None, 
                                            shrinkage=None, 
@@ -109,32 +119,50 @@ class DataMaster(object):
                                            tol=0.0001)
         Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
 
-        return Y_pred
+        self.trained_models["discr"] = model.fit(X, Y)
+
+        train_time = time.time() - start_time
+
+        return Y_pred, train_time
 
     def train_cart(self):
 
         X = self.feature_data
         Y = self.truth_data
 
+        start_time = time.time()
+
         model = DecisionTreeClassifier()
         Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
         
-        return Y_pred
+        self.trained_models["cart"] = model.fit(X, Y)
+
+        train_time = time.time() - start_time
+
+        return Y_pred, train_time
 
     def train_knn(self):
 
         X = self.feature_data
         Y = self.truth_data
+        
+        start_time = time.time()
 
         model = KNeighborsClassifier(n_neighbors=5)  # Arbitrarily choosing 5.
         Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
         
-        return Y_pred
+        self.trained_models["knn"] = model.fit(X, Y)
+
+        train_time = time.time() - start_time
+
+        return Y_pred, train_time
 
     def train_nn(self):
 
         X = self.feature_data
         Y = self.truth_data
+
+        start_time = time.time()
 
         model = MLPClassifier(solver='lbfgs', 
                               alpha=1e-5, 
@@ -142,4 +170,11 @@ class DataMaster(object):
                               random_state=1)
         Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
         
-        return Y_pred
+        self.trained_models["nn"] = model.fit(X, Y)
+
+        train_time = time.time() - start_time
+
+        return Y_pred, train_time
+
+    def predict_on_new_data(self, model):
+        a = 1
