@@ -4,6 +4,7 @@ import pandas as pandas
 import numpy as np
 from copy import deepcopy as deepcopy
 
+
 class TabPredict(QWidget):
 
     name = "Predict"  # Still not sure about this property being here...
@@ -96,33 +97,6 @@ class TabPredict(QWidget):
         self.path_traits["save"].buton.setToolTip("Select new data set to make predictions on.")
         self.path_traits["save"].buton.setGeometry(label_left, label_top, 90, 30)
         self.path_traits["save"].line_edit.setGeometry(label_left+100, label_top, 500, 30)
-
-        # label = QLabel(self)
-        # label.setText("Select a new data set to predict on using the trained models.")
-        # label.setGeometry(label_left, label_top, 500, 20)  
-
-        # label_top += vert_offset
-        # btn_analyze = QPushButton("Browse...", self)
-        # btn_analyze.setToolTip("Select new data set to make predictions on.")
-        # btn_analyze.setGeometry(label_left, label_top, 90, 30)
-        # btn_analyze.clicked.connect(self.on_btn_push_browse)
-        
-        # self.path_disp_pred = QLineEdit(self)  # Setup File path display.
-        # self.path_disp_pred.setGeometry(label_left+100, label_top, 500, 30)
-
-        # label_top += 2*vert_offset
-        # label = QLabel(self)
-        # label.setText("Select save location of predictions.")
-        # label.setGeometry(label_left, label_top, 500, 20)  # setGeometry(left, top, width, height)
-
-        # label_top += vert_offset
-        # btn_analyze = QPushButton("Save", self)
-        # btn_analyze.setToolTip("Browse to location to saved data.")
-        # btn_analyze.setGeometry(label_left, label_top, 90, 30)
-        # btn_analyze.clicked.connect(self.on_btn_push_save)
-        
-        # self.path_disp_save = QLineEdit(self)  # Setup File path display.
-        # self.path_disp_save.setGeometry(label_left+100, label_top, 500, 30)        
 
     def on_btn_push_browse(self):
 

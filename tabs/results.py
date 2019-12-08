@@ -38,10 +38,6 @@ class TabResults(QWidget):
         label.setText("Train Time")
         label.setGeometry(time_left, label_top, label_width, label_height)
 
-        # label = QLabel(self)
-        # label.setText("Save?")
-        # label.setGeometry(check_left, label_top, label_width, label_height)
-
         label_top += vert_offset
 
         # This list MUST match list of models in DataMaster.train_models().
