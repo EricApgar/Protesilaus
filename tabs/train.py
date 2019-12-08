@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
 from tabs.results import TabResults
 
+
 class TabTrain(QWidget):
 
     name = "Train"  # Still not sure about this property being here...

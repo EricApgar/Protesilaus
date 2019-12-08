@@ -1,6 +1,5 @@
 import pandas as pandas
 from sklearn.model_selection import StratifiedKFold, cross_val_predict
-# from sklearn.svm import SVC  # Holding for now because slow train time - see if another way.
 from sklearn.svm import SVC  ## Slow on big data.
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
