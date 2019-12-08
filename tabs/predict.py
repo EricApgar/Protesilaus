@@ -138,10 +138,9 @@ class TabPredict(QWidget):
             input_feats = self.data_master.input_data.columns  # From original data, 
             feat_names = input_feats[input_feats != self.data_master.truth_class]
             if np.all(np.isin(feat_names, data.columns)):
-                self.data_for_pred = data[feat_names.values]  # Data that you will now make predictions on.
-                self.data_for_save = deepcopy(self.data_for_pred)
+                self.data_for_pred = data[feat_names.values]  # Data that you will now make predictions on.                
 
-                self.path_disp_pred.setText(file_name)  # Set path to prediction data in display.
+                self.path_traits["predict"].line_edit.setText(file_name)  # Set path to prediction data in display.
             else:
                 print("Missing features needed for predictions.")
 
@@ -156,14 +155,16 @@ class TabPredict(QWidget):
             self.add_preds_to_save_data()
 
             self.data_for_save.to_excel(file_name)
-            self.path_disp_save.setText(file_name)
+            self.path_traits["save"].line_edit.setText(file_name)
 
     def add_preds_to_save_data(self):
+
+        self.data_for_save = deepcopy(self.data_for_pred)
 
         # Loop through models, make predictions if check box checked.
         for model_name in self.model_traits:
             if self.model_traits[model_name].check_box.isChecked():
                 model = self.data_master.trained_models[model_name]
                 predictions = self.data_master.predict_on_new_data(model, self.data_for_pred)
-                col_name = "Predicted " + self.data_master.truth_class + "- " + model_name
+                col_name = "Predicted " + self.data_master.truth_class + " - " + model_name
                 self.data_for_save.insert(0, col_name, predictions)

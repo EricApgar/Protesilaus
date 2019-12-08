@@ -31,7 +31,7 @@ class TabGroup(QWidget):
         self.tab_group.setTabEnabled(self.tab_group.indexOf(self.tab_group.findChild(TabData)), False)  # Disable all other tabs to start.
         self.tab_group.setTabEnabled(self.tab_group.indexOf(self.tab_group.findChild(TabTrain)), False)  # Disable all other tabs to start.
         self.tab_group.setTabEnabled(self.tab_group.indexOf(self.tab_group.findChild(TabResults)), False)  # Disable all other tabs to start.
-        self.tab_group.setTabEnabled(self.tab_group.indexOf(self.tab_group.findChild(TabPredict)), True)  # Disable all other tabs to start.
+        self.tab_group.setTabEnabled(self.tab_group.indexOf(self.tab_group.findChild(TabPredict)), False)  # Disable all other tabs to start.
 
         self.tab_group.currentChanged.connect(self.tab_changed)  # How to enable "Predict" tab.
 
