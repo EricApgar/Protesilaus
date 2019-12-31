@@ -84,20 +84,6 @@ class TabPredict(QWidget):
         self.path_traits["predict"].buton.setGeometry(label_left, label_top, 90, 30)
         self.path_traits["predict"].line_edit.setGeometry(label_left+100, label_top, 500, 30)
 
-        label_top += 2*vert_offset
-
-        self.path_traits["save"] = Anonymous(label=QLabel(self),
-            buton=QPushButton("Save", self),
-            line_edit=QLineEdit(self),
-            path="")
-        self.path_traits["save"].label.setText("Select a new data set to predict on using the trained models.")
-        self.path_traits["save"].label.setGeometry(label_left, label_top, 500, 20)  # setGeometry(left, top, width, height)
-        label_top += vert_offset
-        self.path_traits["save"].buton.clicked.connect(self.on_btn_push_save)
-        self.path_traits["save"].buton.setToolTip("Select new data set to make predictions on.")
-        self.path_traits["save"].buton.setGeometry(label_left, label_top, 90, 30)
-        self.path_traits["save"].line_edit.setGeometry(label_left+100, label_top, 500, 30)
-
     def on_btn_push_browse(self):
 
         file_name = QFileDialog.getOpenFileName(self, "Select input data: ", "C:\'", "*.xlsx")  # TODO: start location
@@ -115,10 +101,12 @@ class TabPredict(QWidget):
                 self.data_for_pred = data[feat_names.values]  # Data that you will now make predictions on.                
 
                 self.path_traits["predict"].line_edit.setText(file_name)  # Set path to prediction data in display.
+
+                self.save_new_preds()
             else:
                 print("Missing features needed for predictions.")
 
-    def on_btn_push_save(self):
+    def save_new_preds(self):
 
         file_name = QFileDialog.getSaveFileName(self, "Select save file: ", "C:\'", "*.xlsx")  # TODO: start location
         file_name = file_name[0]  # Parse down to single arg of full file path.
@@ -129,7 +117,6 @@ class TabPredict(QWidget):
             self.add_preds_to_save_data()
 
             self.data_for_save.to_excel(file_name)
-            self.path_traits["save"].line_edit.setText(file_name)
 
     def add_preds_to_save_data(self):
 
