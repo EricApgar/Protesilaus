@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QLabel, QListWidget
 from tabs.train import TabTrain
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
+from matplotlib.backends.backend_qt5agg import FigureCanvas
 
 
 class TabData(QWidget):
@@ -23,6 +24,8 @@ class TabData(QWidget):
         self.feature_list.setGeometry(10, 50, 100, 300)  # x, y, w, h
         self.feature_list.itemClicked.connect(self.feature_clicked)  # Link clicking feature to plotting it.
 
+        # self.plo
+
     def feature_clicked(self):
 
         selected_item = self.feature_list.selectedItems()
@@ -32,7 +35,7 @@ class TabData(QWidget):
         tab_index = self.my_parent.tab_group.indexOf(self.my_parent.tab_group.findChild(TabTrain))  # Find index of Data tab.
         self.my_parent.tab_group.setTabEnabled(tab_index, True)  # Feature selected, unlock next tab.
         
-        self.visualize_feature()  # CURRENTLY WORKING
+        self.visualize_feature()  # CURRENTLY WORKING ON THIS
 
     def update_feat_list(self, new_feat_list):
 
