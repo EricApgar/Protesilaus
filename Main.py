@@ -11,6 +11,7 @@ QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 def Main():
 
     app = QApplication(sys.argv)  # Start instance of application.
+    app.setStyle("Fusion")
 
     main_window = MainWindow()  # Create Main window.
     main_window.showMaximized()  # Make the window maximized.
