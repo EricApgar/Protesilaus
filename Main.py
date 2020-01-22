@@ -4,8 +4,9 @@ from PyQt5.QtWidgets import QApplication
 from window import MainWindow
 
 
-QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
-QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
+# These 2 commands have something to do with making things work at multiple resolutions.
+QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
 def Main():
 
