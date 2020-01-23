@@ -15,6 +15,7 @@ class TabGroup(QWidget):
         # width, height = self.get_dims(parent.width(), parent.height())
         # print(str(width) + " , " + str(height))
 
+        # Create group of tabs - created from their own separate classes.
         self.tab_dict = {
             "Input":TabInput(self),
             "Data":TabData(self),
@@ -39,8 +40,8 @@ class TabGroup(QWidget):
         self.layout = QVBoxLayout(self)  # V = Vertical aligned layout.
         self.layout.addWidget(self.tab_group)  # Add the tab group to this layout.
         self.setLayout(self.layout)  # Set layout of QWidget to the tab group.
-        self.setFixedWidth(1000)  # Define width of tab group.
-        self.setFixedHeight(600)  # Define height of tab group.
+        self.setFixedWidth(1000)  # Define width of tab group. Hardcoded for now.
+        self.setFixedHeight(600)  # Define height of tab group. Hardcoded for now.
 
 
     def get_dims(self, width, height):  # TODO.
