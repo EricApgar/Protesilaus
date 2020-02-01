@@ -45,7 +45,8 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
         self.truth_vals_norm = []  # Values of the truth data, normalized.
         
         self.predictions = []  # Kfolded Predictions for estimating model accuracy.
-        self.train_time = []
+        self.train_time = []  # Time to train model.
+        self.accuracy = []  # Number right predictions/total. For regression, accuracy is untouched for now.
 
         # Initialize some things.
         self.set_feat_data()
@@ -74,14 +75,14 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
 
     def train_models(self):
         model_type = calc_class_or_regr(self.raw_data, self.truth_name)  # Get regression or classification.
-        # model_type = "classification"
 
         if model_type == "regression":
             self.predictions, self.train_time = self.train_regression()
         elif model_type == "classification":
             self.predictions, self.train_time = self.train_classification()
+            self.accuracy = 100 * sum(self.predictions == self.truth_vals) / len(self.truth_vals)
         else:
-            raise ValueError("Unknown model type.")
+            raise ValueError("Unknown model type. Cannot train unless regression or classification.")
 
     def train_regression(self):
         x = self.feat_vals
