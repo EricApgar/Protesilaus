@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
 from tabs.results import TabResults
+from training models.svm import ModelSVM
 
 
 class TabTrain(QWidget):
@@ -29,6 +30,8 @@ class TabTrain(QWidget):
         self.data_master.set_truth_data()
         self.data_master.train_models(model_list)
         self.my_parent.tab_dict["Results"].add_update_results()
+
+
 
         # Training finished, unlock results tab.
         tab_index = self.my_parent.tab_group.indexOf(self.my_parent.tab_group.findChild(TabResults))  # Find index of Data tab.
