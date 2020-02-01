@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
 from tabs.results import TabResults
 from model_training.svm import ModelSVM
 from model_training.neural_net import ModelNeuralNet
+from model_training.knn import ModelKNN
 
 
 class TabTrain(QWidget):
@@ -34,6 +35,7 @@ class TabTrain(QWidget):
 
         model_svm = ModelSVM(self.data_master.input_data, self.data_master.truth_class)
         model_nn = ModelNeuralNet(self.data_master.input_data, self.data_master.truth_class)
+        model_knn = ModelKNN(self.data_master.input_data, self.data_master.truth_class)
 
         # Training finished, unlock results tab.
         tab_index = self.my_parent.tab_group.indexOf(self.my_parent.tab_group.findChild(TabResults))  # Find index of Data tab.
