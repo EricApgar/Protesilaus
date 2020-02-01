@@ -3,7 +3,7 @@ import random as random
 from sklearn.model_selection import StratifiedKFold, KFold, cross_val_predict
 from sklearn.svm import SVC, SVR  ## Slow on big data.
 from anonymous import Anonymous
-from model_type import calc_model_type
+from model_training.model_category import calc_class_or_regr
 import time as time
 
 
@@ -45,10 +45,12 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
         self.truth_vals_norm = []  # Values of the truth data, normalized.
         
         self.predictions = []  # Kfolded Predictions for estimating model accuracy.
+        self.train_time = []
 
         # Initialize some things.
         self.set_feat_data()
         self.set_truth_data()
+        self.set_kfolds()
 
         self.train_models()        
 
@@ -67,16 +69,17 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
 
     def set_truth_data(self):
         self.truth_data = self.raw_data[self.truth_name]  # Get all data for truth set.
-        self.truth_vals = self.feat_data.values
+        self.truth_vals = self.truth_data.values
         self.truth_vals_norm = self.truth_data.values  # TODO: Need to normalize this.
 
     def train_models(self):
-        model_type = calc_model_type(self.raw_data, self.truth_name)  # Get regression or classification.
+        model_type = calc_class_or_regr(self.raw_data, self.truth_name)  # Get regression or classification.
+        # model_type = "classification"
 
         if model_type == "regression":
-            predictions, time = self.train_regression()
+            self.predictions, self.train_time = self.train_regression()
         elif model_type == "classification":
-            predictions, time = self.train_classification()
+            self.predictions, self.train_time = self.train_classification()
         else:
             raise ValueError("Unknown model type.")
 
