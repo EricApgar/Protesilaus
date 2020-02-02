@@ -37,8 +37,9 @@ class ModelDiscrm(object):  # Created from data frame and name of truth var.
         #     "regression":[],
         #     "classification":[]}
 
-        self.trained_models = {"regression":[],  # kfolds = StratifiedKFold(n_splits=10, random_state=kfolds_seed)
-            "classification":[]}
+        # self.trained_models = {"regression":[],  # kfolds = StratifiedKFold(n_splits=10, random_state=kfolds_seed)
+        #     "classification":[]}
+        self.full_model = []  # Model trained on all the data.
 
         self.truth_data = pandas.DataFrame()  # Data frame for all truth data.
         self.truth_vals = []  # Values of the truth data.
@@ -109,7 +110,7 @@ class ModelDiscrm(object):  # Created from data frame and name of truth var.
             store_covariance=False, 
             tol=0.0001)
         predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification)
-        self.trained_models["classification"] = model.fit(x, y)
+        self.full_model = model.fit(x, y)
 
         train_time = time.time() - start_time
 

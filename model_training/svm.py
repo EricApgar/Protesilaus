@@ -75,6 +75,7 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
         self.truth_vals_norm = self.truth_data.values  # TODO: Need to normalize this.
 
     def train_models(self):
+        # At some point, probably should make type an input to this method...
         model_type = calc_class_or_regr(self.raw_data, self.truth_name)  # Get regression or classification.
 
         if model_type == "regression":

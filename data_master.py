@@ -1,10 +1,5 @@
 import pandas as pandas
 from sklearn.model_selection import StratifiedKFold, cross_val_predict
-# from sklearn.svm import SVC  ## Slow on big data.
-# from sklearn.tree import DecisionTreeClassifier
-# from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.neural_network import MLPClassifier
 import time as time
 import random as random
 import numpy as numpy
@@ -33,8 +28,8 @@ class DataMaster(object):
 
     model_traits = {}
 
-    kfolds_seed = random.randint(1, 10)
-    kfolds = StratifiedKFold(n_splits=10, random_state=kfolds_seed)
+    # kfolds_seed = random.randint(1, 10)
+    # kfolds = StratifiedKFold(n_splits=10, random_state=kfolds_seed)
 
     data_for_predict = pandas.DataFrame()
     preds_to_save = pandas.DataFrame()
@@ -61,13 +56,6 @@ class DataMaster(object):
             self.feature_data = self.input_data.loc[:, (self.input_data.columns != self.truth_class)].values
 
     def train_models(self, model_list):
-
-        
-        # model_nn = ModelNeuralNet(self.input_data, self.truth_class)
-        # model_knn = ModelKNN(self.input_data, self.truth_class)
-        # model_discrm = ModelDiscrm(self.input_data, self.truth_class)
-        # model_cart = ModelCART(self.input_data, self.truth_class)
-
         # Creat dictionary of kfolded predictions for every model.
         # Calculate kfolded accuracy for each model and store in class property.
         preds = {}
@@ -78,45 +66,30 @@ class DataMaster(object):
                 preds[model] = model_svm.predictions
                 self.scores[model] = model_svm.accuracy
                 self.trained_models["svm"] = model_svm.full_model
-
-                # preds[model], train_time = self.train_svm()
-                # self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             elif model == "discrm":
                 model_discrm = ModelDiscrm(self.input_data, self.truth_class)
                 train_time = model_discrm.train_time
                 preds[model] = model_discrm.predictions
                 self.scores[model] = model_discrm.accuracy
                 self.trained_models["discrm"] = model_discrm.full_model
-
-                # preds[model], train_time = self.train_discr()
-                # self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             elif model == "cart":
                 model_cart = ModelCART(self.input_data, self.truth_class)
                 train_time = model_cart.train_time
                 preds[model] = model_cart.predictions
                 self.scores[model] = model_cart.accuracy
                 self.trained_models["cart"] = model_cart.full_model
-
-                # preds[model], train_time = self.train_cart()
-                # self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             elif model == "knn":
                 model_knn = ModelKNN(self.input_data, self.truth_class)
                 train_time = model_knn.train_time
                 preds[model] = model_knn.predictions
                 self.scores[model] = model_knn.accuracy
                 self.trained_models["knn"] = model_knn.full_model
-
-                # preds[model], train_time = self.train_knn()
-                # self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             elif model == "nn":
                 model_nn = ModelNeuralNet(self.input_data, self.truth_class)
                 train_time = model_nn.train_time
                 preds[model] = model_nn.predictions
                 self.scores[model] = model_nn.accuracy
                 self.trained_models["nn"] = model_nn.full_model
-
-                # preds[model], train_time = self.train_nn()
-                # self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
             else:  # Should never get here. Will break on statement after this print().
                 print("ERROR: Model \"" + model + "\" not found.")
                 # Need to actually error out here instead of just printing. TODO.
@@ -127,94 +100,6 @@ class DataMaster(object):
 
         # for value in self.scores.values():  # Print all scores to screen. DEBUGGING.
         #     print("{0:.2f}".format(value))
-
-    # def train_svm(self):
-
-    #     X = self.feature_data
-    #     Y = self.truth_data
-        
-    #     start_time = time.time()
-
-    #     model = SVC(kernel='linear')
-    #     Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)        
-
-    #     self.trained_models["svm"] = model.fit(X, Y)
-
-    #     train_time = time.time() - start_time
-
-    #     return Y_pred, train_time
-
-    # def train_discr(self):
-
-    #     X = self.feature_data
-    #     Y = self.truth_data
-        
-    #     start_time = time.time()
-
-    #     model = LinearDiscriminantAnalysis(n_components=None, 
-    #                                        priors=None, 
-    #                                        shrinkage=None, 
-    #                                        solver="svd", 
-    #                                        store_covariance=False, 
-    #                                        tol=0.0001)
-    #     Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
-
-    #     self.trained_models["discr"] = model.fit(X, Y)
-
-    #     train_time = time.time() - start_time
-
-    #     return Y_pred, train_time
-
-    # def train_cart(self):
-
-    #     X = self.feature_data
-    #     Y = self.truth_data
-
-    #     start_time = time.time()
-
-    #     model = DecisionTreeClassifier()
-    #     Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
-        
-    #     self.trained_models["cart"] = model.fit(X, Y)
-
-    #     train_time = time.time() - start_time
-
-    #     return Y_pred, train_time
-
-    # def train_knn(self):
-
-    #     X = self.feature_data
-    #     Y = self.truth_data
-        
-    #     start_time = time.time()
-
-    #     model = KNeighborsClassifier(n_neighbors=5)  # Arbitrarily choosing 5.
-    #     Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
-        
-    #     self.trained_models["knn"] = model.fit(X, Y)
-
-    #     train_time = time.time() - start_time
-
-    #     return Y_pred, train_time
-
-    # def train_nn(self):
-
-    #     X = self.feature_data
-    #     Y = self.truth_data
-
-    #     start_time = time.time()
-
-    #     model = MLPClassifier(solver='lbfgs', 
-    #                           alpha=1e-5, 
-    #                           hidden_layer_sizes=(10, 6), 
-    #                           random_state=1)
-    #     Y_pred = cross_val_predict(model, X, Y, cv=self.kfolds)
-        
-    #     self.trained_models["nn"] = model.fit(X, Y)
-
-    #     train_time = time.time() - start_time
-
-    #     return Y_pred, train_time
 
     def predict_on_new_data(self, model, data):
         
