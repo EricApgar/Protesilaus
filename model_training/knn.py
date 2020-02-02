@@ -1,5 +1,6 @@
 import pandas as pandas
 import random as random
+from numpy import nan as nan
 from sklearn.model_selection import StratifiedKFold, KFold, cross_val_predict
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from anonymous import Anonymous
@@ -46,8 +47,8 @@ class ModelKNN(object):  # Created from data frame and name of truth var.
         self.truth_vals_norm = []  # Values of the truth data, normalized.
         
         self.predictions = []  # Kfolded Predictions for estimating model accuracy.
-        self.train_time = []  # Time to train model.
-        self.accuracy = []  # Number right predictions/total. For regression, accuracy is untouched for now.
+        self.train_time = 0  # Time to train model.
+        self.accuracy = 0  # Number right predictions/total. For regression, accuracy is untouched for now.
 
         # Initialize some things.
         self.set_feat_data()
