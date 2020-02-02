@@ -93,10 +93,11 @@ class ModelDiscrm(object):  # Created from data frame and name of truth var.
         start_time = time.time()
 
         # TODO: Can Discriminant classifiers do regression?
+        predictions = 0 # array of nans
 
         train_time = time.time() - start_time
 
-        return [], []  # Return nothing for now.
+        return predictions, train_time  # Return nothing for now.
 
     def train_classification(self):
         x = self.feat_vals
