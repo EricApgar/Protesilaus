@@ -42,7 +42,7 @@ class TabResults(QWidget):
 
         # This list MUST match list of models in DataMaster.train_models().
         model_labels = {"svm":"Support Vector Machine:",
-                        "discr":"Discriminant Classifier:",
+                        "discrm":"Discriminant Classifier:",
                         "cart":"Random Forest:",
                         "knn":"K-Nearest-Neighbors:",
                         "nn":"Neural Network:"}

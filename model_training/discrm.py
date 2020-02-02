@@ -1,13 +1,13 @@
 import pandas as pandas
 import random as random
 from sklearn.model_selection import StratifiedKFold, KFold, cross_val_predict
-from sklearn.svm import SVC, SVR  ## Slow on big data.
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
 from anonymous import Anonymous
 from model_training.model_category import calc_class_or_regr
 import time as time
 
 
-class ModelSVM(object):  # Created from data frame and name of truth var.
+class ModelDiscrm(object):  # Created from data frame and name of truth var.
 
     # Properties defined here are static, belong to the Class itself (not an instance) and will change all instances of the class.
     # They do not need the "self" reference.
@@ -37,9 +37,8 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
         #     "regression":[],
         #     "classification":[]}
 
-        # self.trained_models = {"regression":[],  
-        #     "classification":[]}
-        self.full_model = []  # Model trained on all the data.
+        self.trained_models = {"regression":[],  # kfolds = StratifiedKFold(n_splits=10, random_state=kfolds_seed)
+            "classification":[]}
 
         self.truth_data = pandas.DataFrame()  # Data frame for all truth data.
         self.truth_vals = []  # Values of the truth data.
@@ -91,13 +90,11 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
 
         start_time = time.time()
 
-        model = SVR(kernel="rbf", C=100, gamma=0.1, epsilon=.1)
-        predictions = cross_val_predict(model, x, y, cv=self.k_folds.regression)
-        self.full_model = model.fit(x, y)
+        # TODO: Can Discriminant classifiers do regression?
 
         train_time = time.time() - start_time
 
-        return predictions, train_time
+        return [], []  # Return nothing for now.
 
     def train_classification(self):
         x = self.feat_vals
@@ -105,9 +102,14 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
 
         start_time = time.time()
 
-        model = SVC(kernel="linear")
+        model = LinearDiscriminantAnalysis(n_components=None, 
+            priors=None, 
+            shrinkage=None, 
+            solver="svd", 
+            store_covariance=False, 
+            tol=0.0001)
         predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification)
-        self.full_model = model.fit(x, y)
+        self.trained_models["classification"] = model.fit(x, y)
 
         train_time = time.time() - start_time
 
