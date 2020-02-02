@@ -86,7 +86,7 @@ class DataMaster(object):
                 train_time = model_discrm.train_time
                 preds[model] = model_discrm.predictions
                 self.scores[model] = model_discrm.accuracy
-                self.trained_models["discrm"] = model_svm.full_model
+                self.trained_models["discrm"] = model_discrm.full_model
 
                 # preds[model], train_time = self.train_discr()
                 # self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
@@ -95,7 +95,7 @@ class DataMaster(object):
                 train_time = model_cart.train_time
                 preds[model] = model_cart.predictions
                 self.scores[model] = model_cart.accuracy
-                self.trained_models["cart"] = model_svm.full_model
+                self.trained_models["cart"] = model_cart.full_model
 
                 # preds[model], train_time = self.train_cart()
                 # self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
@@ -104,7 +104,7 @@ class DataMaster(object):
                 train_time = model_knn.train_time
                 preds[model] = model_knn.predictions
                 self.scores[model] = model_knn.accuracy
-                self.trained_models["knn"] = model_svm.full_model
+                self.trained_models["knn"] = model_knn.full_model
 
                 # preds[model], train_time = self.train_knn()
                 # self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
@@ -113,7 +113,7 @@ class DataMaster(object):
                 train_time = model_nn.train_time
                 preds[model] = model_nn.predictions
                 self.scores[model] = model_nn.accuracy
-                self.trained_models["nn"] = model_svm.full_model
+                self.trained_models["nn"] = model_nn.full_model
 
                 # preds[model], train_time = self.train_nn()
                 # self.scores[model] = 100 * sum(preds[model] == self.truth_data) / len(self.truth_data)
