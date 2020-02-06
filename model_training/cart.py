@@ -6,6 +6,7 @@ from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from anonymous import Anonymous
 from model_training.model_category import calc_class_or_regr
 import time as time
+from sklearn.metrics import accuracy_score
 
 
 class ModelCART(object):  # Created from data frame and name of truth var.
@@ -82,7 +83,7 @@ class ModelCART(object):  # Created from data frame and name of truth var.
             self.predictions, self.train_time = self.train_regression()
         elif model_type == "classification":
             self.predictions, self.train_time = self.train_classification()
-            self.accuracy = 100 * sum(self.predictions == self.truth_vals) / len(self.truth_vals)
+            self.accuracy = 100*accuracy_score(self.truth_vals, self.predictions)
         else:
             raise ValueError("Unknown model type. Cannot train unless regression or classification.")
 
