@@ -93,7 +93,7 @@ class ModelCART(object):  # Created from data frame and name of truth var.
         start_time = time.time()
 
         model = DecisionTreeRegressor()
-        predictions = cross_val_predict(model, x, y, cv=self.k_folds.regression)
+        predictions = cross_val_predict(model, x, y, cv=self.k_folds.regression, n_jobs=-1)
         self.full_model = model.fit(x, y)
 
         train_time = time.time() - start_time
@@ -107,7 +107,7 @@ class ModelCART(object):  # Created from data frame and name of truth var.
         start_time = time.time()
 
         model = DecisionTreeClassifier()
-        predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification)
+        predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification, n_jobs=-1)
         self.full_model = model.fit(x, y)
 
         train_time = time.time() - start_time
