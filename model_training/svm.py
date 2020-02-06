@@ -95,7 +95,7 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
         start_time = time.time()
 
         model = SVR(kernel="rbf", C=100, gamma=0.1, epsilon=.1)
-        predictions = cross_val_predict(model, x, y, cv=self.k_folds.regression, n_jobs=-1)
+        predictions = cross_val_predict(model, x, y, cv=self.k_folds.regression)
         self.full_model = model.fit(x, y)
 
         train_time = time.time() - start_time
@@ -109,7 +109,7 @@ class ModelSVM(object):  # Created from data frame and name of truth var.
         start_time = time.time()
 
         model = SVC(kernel="rbf")
-        predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification, n_jobs=-1)
+        predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification)
         self.full_model = model.fit(x, y)
 
         train_time = time.time() - start_time

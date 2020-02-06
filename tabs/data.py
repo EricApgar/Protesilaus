@@ -30,7 +30,7 @@ class TabData(QWidget):
         self.data_master.feature_classes = self.data_master.input_data.columns[self.data_master.input_data.columns != self.data_master.truth_class]
         
         # Disable check box for Discriminant Classifiers if Regression and not Classification.
-        
+        self.update_discrm_check_box()
 
         tab_index = self.my_parent.tab_group.indexOf(self.my_parent.tab_group.findChild(TabTrain))  # Find index of Data tab.
         self.my_parent.tab_group.setTabEnabled(tab_index, True)  # Feature selected, unlock next tab.
@@ -69,10 +69,10 @@ class TabData(QWidget):
         feat_type = self.get_feat_data_type(self.data_master.input_data, self.data_master.truth_class)
 
         if feat_type == "string":  # Classification.
-            self.my_parent.tab_dict["Predict"].discrm.check_box.setChecked(False)
-            self.my_parent.tab_dict["Predict"].discrm.check_box.isEnabled(True)
+            self.my_parent.tab_dict["Predict"].model_traits["discrm"].check_box.setChecked(False)
+            self.my_parent.tab_dict["Predict"].model_traits["discrm"].check_box.setEnabled(True)
         elif feat_type == "number":  # Regression.
-            self.my_parent.tab_dict["Predict"].discrm.check_box.setChecked(False)
-            self.my_parent.tab_dict["Predict"].discrm.check_box.isEnabled(False)
+            self.my_parent.tab_dict["Predict"].model_traits["discrm"].check_box.setChecked(False)
+            self.my_parent.tab_dict["Predict"].model_traits["discrm"].check_box.setEnabled(False)
         else:
             raise ValueError("You selected a mixed truth feature.")

@@ -112,7 +112,7 @@ class ModelDiscrm(object):  # Created from data frame and name of truth var.
             solver="svd", 
             store_covariance=False, 
             tol=0.0001)
-        predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification, n_jobs=-1)
+        predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification)
         self.full_model = model.fit(x, y)
 
         train_time = time.time() - start_time

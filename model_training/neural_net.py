@@ -97,7 +97,7 @@ class ModelNeuralNet(object):  # Created from data frame and name of truth var.
             alpha=1e-5, 
             hidden_layer_sizes=(10, 6),  # TODO: Dont make layers hardcoded, or all these other params.
             random_state=1)
-        predictions = cross_val_predict(model, x, y, cv=self.k_folds.regression, n_jobs=-1)
+        predictions = cross_val_predict(model, x, y, cv=self.k_folds.regression)
         self.full_model = model.fit(x, y)
 
         train_time = time.time() - start_time
@@ -114,7 +114,7 @@ class ModelNeuralNet(object):  # Created from data frame and name of truth var.
             alpha=1e-5, 
             hidden_layer_sizes=(10, 6),  # TODO: Dont make layers hardcoded, or all these other params.
             random_state=1)
-        predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification, n_jobs=-1)
+        predictions = cross_val_predict(model, x, y, cv=self.k_folds.classification)
         self.full_model = model.fit(x, y)
 
         train_time = time.time() - start_time
