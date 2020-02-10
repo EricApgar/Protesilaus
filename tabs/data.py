@@ -1,10 +1,9 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QListWidget, QGraphicsView, QVBoxLayout
 from tabs.train import TabTrain
 from pandas.api.types import is_string_dtype, is_numeric_dtype
-from seaborn import distplot, countplot
+from seaborn import distplot, countplot, boxplot
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.pyplot as plot_lib
-from matplotlib.figure import Figure
+from matplotlib.figure import Figure as FigureClass
 
 
 class TabData(QWidget):
@@ -26,15 +25,14 @@ class TabData(QWidget):
         self.feature_list.setGeometry(10, 50, 100, 300)  # x, y, w, h
         self.feature_list.itemClicked.connect(self.feature_clicked)  # Link clicking feature to plotting it.
 
-        # TEST ------------------------------------
-
         # Create plot area for feature data plot.
-        self.feature_fig = Figure()
+        self.feature_fig = FigureClass()
         self.plot_canvas = FigureCanvas(self.feature_fig)
-        self.plot_canvas.setGeometry(200, 10, 400, 400)
+        self.plot_canvas.setGeometry(200, 10, 800, 500)
         self.plot_canvas.setParent(self)  # Set canvas to be on TabData (self).
 
-        self.fig_axes = self.feature_fig.add_subplot(111)     
+        self.fig_axes = {"Figure1":self.feature_fig.add_subplot(121),
+            "Figure2":self.feature_fig.add_subplot(122)}
 
     def feature_clicked(self):
 
@@ -56,18 +54,34 @@ class TabData(QWidget):
         self.feature_list.addItems(new_feat_list)
 
     def visualize_feature(self):
-        data_frame = self.data_master.input_data
-        feat_name = self.data_master.truth_class
+        data_frame = self.data_master.input_data  # Short hand name for main data frame.
+        feat_name = self.data_master.truth_class  # Name of feature data to be plotted.
 
-        feat_type = self.get_feat_data_type(data_frame, feat_name)
-        truth_data = data_frame[feat_name].values
+        feat_type = self.get_feat_data_type(data_frame, feat_name)  # Get feature type (string|number).
+        truth_data = data_frame[feat_name].values  # Get truth data from dataframe and feature name.
         
-        self.fig_axes.clear()
+        for _, axes in self.fig_axes.items():
+            axes.clear()  # Clear axes of previous plot.
 
-        if feat_type == "string":  # Good, plot histogram
-            countplot(truth_data, ax=self.fig_axes)
-        else:
-            distplot(truth_data, ax=self.fig_axes)
+        # Set random properties of figure common to both types:
+        fig_title = "Details for \"" + feat_name + "\""
+        y_label = "Count"
+        x_label = "\"" + feat_name + "\"" + " Values"
+
+        if feat_type == "string":  # Plot histogram for either type.
+            figure_1 = countplot(truth_data, ax=self.fig_axes["Figure1"])
+            figure_1.set_title(fig_title)
+            figure_1.set(xlabel=x_label, ylabel=y_label)
+
+            # figure_2 = countplot(truth_data, ax=self.fig_axes["Figure1"])
+        else:  # Numerical Data.
+            figure_1 = distplot(truth_data, ax=self.fig_axes["Figure1"])
+            figure_1.set_title(fig_title)
+            figure_1.set(xlabel=x_label, ylabel=y_label)
+
+            figure_2 = boxplot(truth_data, ax=self.fig_axes["Figure2"])
+            figure_2.set_title(fig_title)
+            figure_2.set(xlabel=x_label, ylabel=y_label)
 
         self.plot_canvas.draw_idle()
 
