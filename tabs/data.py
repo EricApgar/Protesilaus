@@ -1,7 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QListWidget
+from PyQt5.QtWidgets import QWidget, QLabel, QListWidget, QGraphicsView, QVBoxLayout
 from tabs.train import TabTrain
 from pandas.api.types import is_string_dtype, is_numeric_dtype
-from matplotlib.backends.backend_qt5agg import FigureCanvas
+import seaborn
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import matplotlib.pyplot as plot_lib
 
 
 class TabData(QWidget):
@@ -23,6 +25,25 @@ class TabData(QWidget):
         self.feature_list.setGeometry(10, 50, 100, 300)  # x, y, w, h
         self.feature_list.itemClicked.connect(self.feature_clicked)  # Link clicking feature to plotting it.
 
+        # TEST ------------------------------------
+
+        # Create plot area for feature data plot.
+        self.feature_plot = plot_lib.figure()
+        # figure.add_axes()
+        self.plot_canvas = FigureCanvas(self.feature_plot)
+        self.plot_canvas.setGeometry(200, 10, 300, 300)
+        self.plot_canvas.setParent(self)  # Set canvas to be on TabData (self).
+
+        # self.figure = plot_lib.figure(self)
+        # self.feature_plot = FigureCanvas(self.figure)
+        # self.feature_plot.setGeometry(200, 10, 300, 300)
+        # layout = QVBoxLayout()
+        # # layout.setContentsMargins(100, 10, 10, 10)
+        # layout.addWidget(self.feature_plot)
+        # self.setLayout(layout)
+
+        # self.show()        
+
     def feature_clicked(self):
 
         selected_item = self.feature_list.selectedItems()
@@ -43,12 +64,12 @@ class TabData(QWidget):
         self.feature_list.addItems(new_feat_list)
 
     def visualize_feature(self):
+        feat_type = self.get_feat_data_type(self.data_master.input_data, self.data_master.truth_class)
+        truth_data = self.data_master.input_data[self.data_master.truth_class]
 
-        feat_data_type = self.get_feat_data_type(self.data_master.input_data, self.data_master.truth_class)
-        if feat_data_type == "string":
-            # Good, plot histogram
-            feat_data = self.data_master.input_data[self.data_master.truth_class]
-            self.plot_feat_data_str(feat_data)
+        if feat_type == "string":  # Good, plot histogram
+            # (seaborn.distplot(truth_data))
+            self.feature_plot
         else:
             a = 1
 
@@ -60,10 +81,6 @@ class TabData(QWidget):
             return "number"
         else:
             return "unknown"
-
-    def plot_feat_data_str(self, feat_data):
-        a = 1
-        # Expecting a string array (so a list?)
 
     def update_discrm_check_box(self):
         feat_type = self.get_feat_data_type(self.data_master.input_data, self.data_master.truth_class)
