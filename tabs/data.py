@@ -1,9 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QListWidget, QGraphicsView, QVBoxLayout
 from tabs.train import TabTrain
 from pandas.api.types import is_string_dtype, is_numeric_dtype
-import seaborn
+from seaborn import distplot, countplot
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plot_lib
+from matplotlib.figure import Figure
 
 
 class TabData(QWidget):
@@ -28,21 +29,12 @@ class TabData(QWidget):
         # TEST ------------------------------------
 
         # Create plot area for feature data plot.
-        self.feature_plot = plot_lib.figure()
-        # figure.add_axes()
-        self.plot_canvas = FigureCanvas(self.feature_plot)
-        self.plot_canvas.setGeometry(200, 10, 300, 300)
+        self.feature_fig = Figure()
+        self.plot_canvas = FigureCanvas(self.feature_fig)
+        self.plot_canvas.setGeometry(200, 10, 400, 400)
         self.plot_canvas.setParent(self)  # Set canvas to be on TabData (self).
 
-        # self.figure = plot_lib.figure(self)
-        # self.feature_plot = FigureCanvas(self.figure)
-        # self.feature_plot.setGeometry(200, 10, 300, 300)
-        # layout = QVBoxLayout()
-        # # layout.setContentsMargins(100, 10, 10, 10)
-        # layout.addWidget(self.feature_plot)
-        # self.setLayout(layout)
-
-        # self.show()        
+        self.fig_axes = self.feature_fig.add_subplot(111)     
 
     def feature_clicked(self):
 
@@ -64,14 +56,20 @@ class TabData(QWidget):
         self.feature_list.addItems(new_feat_list)
 
     def visualize_feature(self):
-        feat_type = self.get_feat_data_type(self.data_master.input_data, self.data_master.truth_class)
-        truth_data = self.data_master.input_data[self.data_master.truth_class]
+        data_frame = self.data_master.input_data
+        feat_name = self.data_master.truth_class
+
+        feat_type = self.get_feat_data_type(data_frame, feat_name)
+        truth_data = data_frame[feat_name].values
+        
+        self.fig_axes.clear()
 
         if feat_type == "string":  # Good, plot histogram
-            # (seaborn.distplot(truth_data))
-            self.feature_plot
+            countplot(truth_data, ax=self.fig_axes)
         else:
-            a = 1
+            distplot(truth_data, ax=self.fig_axes)
+
+        self.plot_canvas.draw_idle()
 
     def get_feat_data_type(self, data_frame, feat_name):
         
