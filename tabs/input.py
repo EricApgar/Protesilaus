@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit, QFileDialog
-# from DataMaster import DataMaster
+from PyQt5.QtWidgets import QScrollArea, QTableWidget, QVBoxLayout, QTableWidgetItem  # Everything for excel table.
+from PyQt5.QtCore import Qt
 import pandas as pandas
 import os.path as path
 from tabs.data import TabData
@@ -32,6 +33,15 @@ class TabInput(QWidget):
         self.path_disp = QLineEdit(self)
         self.path_disp.setGeometry(100, 50, 500, 30)
 
+        # Setup excel table view into input data.
+        self.win = QWidget(self)
+        self.win.setGeometry(10, 100, 600, 300)
+        scroll = QScrollArea()
+        layout = QVBoxLayout()
+        self.data_table = QTableWidget()
+        scroll.setWidget(self.data_table)
+        layout.addWidget(self.data_table)
+        self.win.setLayout(layout)
 
     def on_btn_push_browse(self):
 
@@ -84,5 +94,14 @@ class TabInput(QWidget):
         
 
     def display_data(self, display_this):
+        data_frame = self.data_master.input_data
+        self.data_table.setColumnCount(len(data_frame.columns))
+        self.data_table.setRowCount(len(data_frame.index))
+        self.data_table.setHorizontalHeaderLabels(data_frame.columns)
+        for i in range(len(data_frame.index)):
+            for j in range(len(data_frame.columns)):
+                # cell_item = self.data_table.item(i, j)  # TODO: Make cell not editable.
+                # cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
+                self.data_table.setItem(i, j, QTableWidgetItem(str(data_frame.iloc[i, j])))
 
-        a = 1
+        self.win.show()
