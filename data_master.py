@@ -40,13 +40,19 @@ class DataMaster(object):
 
         return
 
+    def check_for_mixed_data(self, data_frame):
+        is_mixed_list = data_frame.applymap(type).nunique() > 1
+        mixed_feat_list = [feat_name for feat_name in data_frame.columns if is_mixed_list[feat_name]]
+
+        return mixed_feat_list
+
     def add_update_data(self, data_frame):
 
         self.input_data = data_frame  # Set property to loaded data frame.
         # Other option would be to send this function a path and then have this load the data, 
         # but Tyler said that was bad and this should be passed a data frame. 
         # Still not sure I agree...
-        
+
     def set_truth_data(self):
 
         if not self.truth_class:  # String is empty, or no feature has been selected.

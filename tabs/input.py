@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit, QFileDialog
-from PyQt5.QtWidgets import QScrollArea, QTableWidget, QVBoxLayout, QTableWidgetItem  # Everything for excel table.
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QScrollArea, QTableWidget, QVBoxLayout, QTableWidgetItem, QAbstractScrollArea  # Everything for excel table.
+from PyQt5.QtWidgets import QMess
+# from PyQt5.QtCore import Qt
 import pandas as pandas
 import os.path as path
 from tabs.data import TabData
@@ -90,9 +91,13 @@ class TabInput(QWidget):
             # Do nothing right now. TODO: pop-up dialogue box saying problem loading data.
             a = 1
 
-        self.data_master.add_update_data(data_input_raw)  # Add data frame to MainWindow.DataMaster.
+        mixed_feat_list = self.data_master.check_for_mixed_data(data_input_raw)
+        if not mixed_feat_list:  # Mixed feature list is empty, add dataframe to master.
+            self.data_master.add_update_data(data_input_raw)  # Add data frame to MainWindow.DataMaster.
+        else:
+            a = 1
+            # pop_up box saying bad features, fix and reload data frame.
         
-
     def display_data(self, display_this):
         data_frame = self.data_master.input_data
         self.data_table.setColumnCount(len(data_frame.columns))
@@ -104,4 +109,6 @@ class TabInput(QWidget):
                 # cell_item.setFlags(cell_item.flags() ^ Qt.ItemIsEditable)
                 self.data_table.setItem(i, j, QTableWidgetItem(str(data_frame.iloc[i, j])))
 
+        self.data_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.data_table.resizeColumnsToContents()
         self.win.show()
