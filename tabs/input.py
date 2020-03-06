@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit, QFileDialog
 from PyQt5.QtWidgets import QScrollArea, QTableWidget, QVBoxLayout, QTableWidgetItem, QAbstractScrollArea  # Everything for excel table.
-from PyQt5.QtWidgets import QMess
+# from PyQt5.QtWidgets import QMess
 # from PyQt5.QtCore import Qt
 import pandas as pandas
 import os.path as path
@@ -92,11 +92,20 @@ class TabInput(QWidget):
             a = 1
 
         mixed_feat_list = self.data_master.check_for_mixed_data(data_input_raw)
+
+        # Drop all bad (mixed) features.        
+        if len(mixed_feat_list) == data_input_raw.shape[1]:
+            # Whole list is garbage, pop up list to say give me better data set.
+            raise ValueError("This should be a popup box. Bad mixed feature data.")
+
+        homogenous_data_frame = data_input_raw
         if not mixed_feat_list:  # Mixed feature list is empty, add dataframe to master.
-            self.data_master.add_update_data(data_input_raw)  # Add data frame to MainWindow.DataMaster.
-        else:
-            a = 1
-            # pop_up box saying bad features, fix and reload data frame.
+            a = 1  # TODO: Change this statement.
+        else:  # Have some bad features, lets ignore those.
+            keep_idx = [not a in mixed_feat_list for a in homogenous_data_frame.columns]
+            homogenous_data_frame = homogenous_data_frame.iloc[:, keep_idx]
+
+        self.data_master.add_update_data(homogenous_data_frame)  # Add data frame to MainWindow.DataMaster.
         
     def display_data(self, display_this):
         data_frame = self.data_master.input_data
