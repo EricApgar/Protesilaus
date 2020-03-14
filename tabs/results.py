@@ -1,6 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit, QCheckBox, QFileDialog
 from data_master import DataMaster
 from anonymous import Anonymous
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure as FigureClass
+# from matplotlib.pyplot import bar as BarPlot
+from seaborn import barplot as BarPlot
 
 
 class TabResults(QWidget):
@@ -64,6 +68,14 @@ class TabResults(QWidget):
 
             label_top += vert_offset
 
+        # Create plot area for feature importance plot.
+        self.feature_fig = FigureClass()
+        self.plot_canvas = FigureCanvas(self.feature_fig)
+        self.plot_canvas.setGeometry(400, 50, 800, 500)  # setGeometry(left, top, width, height)
+        self.plot_canvas.setParent(self)  # Set canvas to be on TabData (self).
+
+        self.fig_axes = {"Figure1":self.feature_fig.add_subplot(111)}
+
         # On clicking Results tab, enable Predict tab.
 
     def add_update_results(self):
@@ -74,3 +86,26 @@ class TabResults(QWidget):
             self.model_traits[model].train_time.setText("{0:.2f}".format(train_time))
             self.model_traits[model].label_score.setText("{0:.2f}".format(accuracy))
             self.my_parent.tab_dict["Predict"].model_traits[model].label_score.setText("{0:.2f}".format(accuracy))
+
+    def plot_feature_importance(self):
+
+        feature_importances = self.data_master.trained_models["cart"].feature_importances_
+        feature_names = self.data_master.input_data.columns[(self.data_master.input_data.columns != self.data_master.truth_class)].values
+
+        for _, axes in self.fig_axes.items():
+            axes.clear()  # Clear axes of previous plot.
+
+        # Set random properties of figure common to both types:
+        fig_title = "Feature Importance"
+        y_label = "Y-Something"
+        x_label = "X-Something"
+
+        figure_1 = BarPlot(feature_names, feature_importances, ax=self.fig_axes["Figure1"])
+        figure_1.set_title(fig_title)
+        figure_1.set(xlabel=x_label, ylabel=y_label)
+
+        # figure_1 = distplot(truth_data, ax=self.fig_axes["Figure1"])
+        # figure_1.set_title(fig_title)
+        # figure_1.set(xlabel=x_label, ylabel=y_label)
+
+        self.plot_canvas.draw_idle()
